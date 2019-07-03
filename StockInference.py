@@ -19,15 +19,16 @@ r.flushall()
 
 with ruleset('risk'):
     # matching primitive array
-    @when_all(m.payments.allItems((item > 100) & (item < 500)))
+
+    @when_all(m.values.allItems((item > 100) | (item < 150)))
     def rule1(c):
-        print('fraud 1 detected {0}'.format(c.m.payments))
+        print('fraud 1 detected {0}'.format(c.m.values))
 
 
     # matching object array
-    @when_all(m.payments.allItems((item.amount < 250) | (item.amount >= 300)))
+    @when_all(m.values.allItems((item.amount < 250) | (item.amount >= 300)))
     def rule2(c):
-        print('fraud 2 detected {0}'.format(c.m.payments))
+        print('fraud 2 detected {0}'.format(c.m.values))
 
 
     # pattern matching string array
@@ -37,17 +38,17 @@ with ruleset('risk'):
 
 
     # matching nested arrays
-    @when_all(m.payments.anyItem(item.allItems(item < 100)))
+    @when_all(m.values.anyItem(item.allItems(item < 100)))
     def rule4(c):
-        print('fraud 4 detected {0}'.format(c.m.payments))
+        print('fraud 4 detected {0}'.format(c.m.values))
 
 
     @when_start
     def start(host):
-        host.post('risk', {'payments': [150, 300, 450]})
-        host.post('risk', {'payments': [{'amount': 200}, {'amount': 300}, {'amount': 450}]})
+        host.post('risk', {'values': [150, 300]})
+        host.post('risk', {'values': [{'amount': 200}, {'amount': 300}, {'amount': 450}]})
         host.post('risk', {'cards': ['one card', 'two cards', 'three cards']})
-        host.post('risk', {'payments': [[10, 20, 30], [30, 40, 50], [10, 20]]})
+        host.post('risk', {'values': [[10, 20, 30], [30, 40, 50], [10, 20]]})
 
 
-run_all([{'host': 'localhost', 'port': 6379}]);
+run_all([{'host': 'localhost', 'port': 6379}])
