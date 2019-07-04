@@ -10,10 +10,6 @@ from datetime import datetime
 os.environ["IEX_API_VERSION"] = "iexcloud-sandbox"
 os.environ["IEX_TOKEN"] = "Tpk_d9cc24d84d83489d88e9faeaf93dbaf8"
 
-# Set data interval
-date = datetime(2019, 5, 23)
-
-
 
 # Request settings
 URL = "http://localhost:5000/stock/facts"

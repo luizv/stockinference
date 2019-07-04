@@ -12,40 +12,41 @@ import os
 os.environ["IEX_API_VERSION"]="iexcloud-sandbox"
 os.environ["IEX_TOKEN"]="Tpk_d9cc24d84d83489d88e9faeaf93dbaf8"
 
-
 class SIStockStorage:
 
-    def csv_path(self,stock):
-        return SIConfig.storage_directory_name + stock + '.csv'
+    @staticmethod
+    def csv_path(stock):
+        return SIConfig.storage_directory_name +'/' + stock + '.csv'
 
-
-    def check_directory_created(stock):
+    @staticmethod
+    def check_directory_created():
         if not(os.path.exists('./' + SIConfig.storage_directory_name)):
             os.mkdir(SIConfig.storage_directory_name)
 
-
-    def get_stock_archive(self, stock):
-        path = self.csv_path(stock)
+    @staticmethod
+    def get_stock_archive(stock):
+        path = SIStockStorage.csv_path(stock)
         if not(os.path.exists(path)):
             return
         else:
             return pd.read_csv(path)
 
-
-    def stock_archive_exists(self, stock):
-        path = self.csv_path(stock)
+    @staticmethod
+    def stock_archive_exists(stock):
+        path = SIStockStorage.csv_path(stock)
         if not (os.path.exists(path)):
             return
         else:
             return pd.read_csv(path)
 
-
-    def savestocks(_):
+    @staticmethod
+    def savestocks():
         print("save")
 
 
 #API
-    def update_data(self, stock):
+    @staticmethod
+    def update_data(stock):
         '''
         Get or update data store
         :param stock:
@@ -69,12 +70,30 @@ class SIStockStorage:
         updated_data = pd.concat(stock_data, new_data)
         updated_data = updated_data.reset_index(drop=True)
 
-        self.check_directory_created()
-        csv_name = self.csv_path(stock)
+        SIStockStorage.check_directory_created()
+        csv_name = SIStockStorage.csv_path(stock)
 
         updated_data.to_csv(csv_name)
 
 
 
 
+### TO GET STOCK LIST
+    # def get_stock_list(self, name):
+    #     categories = ["Electronic Technology", "Distribution Services", "Health Technology",
+    #      "Commercial Services",  "Industrial Services", "Finance",
+    #      "Process Industries", "Transportation", "Technology Services",
+    #      "Producer Manufacturing", "Retail Trade", "Consumer Services",
+    #      "Non-Energy Minerals", "Utilities", "Miscellaneous", "Health Services",
+    #      "Consumer Durables", "Consumer Non-Durables", "Communications",
+    #      "Energy Minerals", "Government"]
+
+
+### GET SYMBOLS (NEED REAL TOKEN)
+#from iexfinance.refdata import get_symbols
+
+# symbols = get_symbols(format='csv')
+# symbols_list = pd.DataFrame.from_dict(symbols)
+# SIStockStorage.check_directory_created()
+# symbols_list.to_csv(SIStockStorage.csv_path("symbols_list"))
 
