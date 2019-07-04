@@ -10,8 +10,9 @@ class SIConfig:
 
 
     storage_directory_name = "exports"
+    symbols_directory_name = "symbol_lists"
 
-    symbols_list_name = "all_symbols"
+    symbols_list_name = "communications" #600 stocks
 
     # Other variables
     #balance = 100000

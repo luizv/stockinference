@@ -6,6 +6,7 @@ import json
 
 ## FOR STOCK DATA
 from iexfinance.stocks import get_historical_intraday
+from iexfinance.stocks import get_historical_data
 
 ## SET API PERMISSIONS
 import os
@@ -15,21 +16,37 @@ os.environ["IEX_TOKEN"]="Tpk_d9cc24d84d83489d88e9faeaf93dbaf8"
 class SIStockStorage:
 
     @staticmethod
-    def csv_path(stock):
-        return SIConfig.storage_directory_name +'/' + stock + '.csv'
+    def csv_path(stock, directory=SIConfig.storage_directory_name):
+        return directory +'/' + stock + '.csv'
+
 
     @staticmethod
     def check_directory_created():
-        if not(os.path.exists('./' + SIConfig.storage_directory_name)):
+        if not(os.path.exists(SIConfig.storage_directory_name)):
             os.mkdir(SIConfig.storage_directory_name)
 
+        if not (os.path.exists(SIConfig.symbols_directory_name)):
+            os.mkdir(SIConfig.symbols_directory_name)
+
+
     @staticmethod
-    def get_stock_archive(stock):
+    def get_stock_archive(stock) -> (pd.DataFrame):
         path = SIStockStorage.csv_path(stock)
         if not(os.path.exists(path)):
             return
         else:
             return pd.read_csv(path)
+
+
+
+    @staticmethod
+    def get_symbol_archive(listname=SIConfig.symbols_list_name):
+        path = SIStockStorage.csv_path(listname, directory=SIConfig.symbols_directory_name)
+        if not (os.path.exists(path)):
+            return
+        else:
+            return pd.read_csv(path)
+
 
     @staticmethod
     def stock_archive_exists(stock):
@@ -38,6 +55,7 @@ class SIStockStorage:
             return
         else:
             return pd.read_csv(path)
+
 
     @staticmethod
     def savestocks():
@@ -56,19 +74,20 @@ class SIStockStorage:
         stock_data = SIStockStorage.get_stock_archive(stock)
 
         if stock_data is not None:
-            print("update date")
+            stock_data = pd.DataFrame()
             # from_date = last_updated_data_for_stock
         else:
-            stock_data = pd.DataFrame.empty
+            stock_data = pd.DataFrame()
 
 
         start = from_date
         end = datetime.now()
 
-        new_data = get_historical_intraday(stock, start=start, end=end, output_format='pandas')
+        new_data = get_historical_data(stock, start=start, end=end, output_format='pandas')
 
-        updated_data = pd.concat(stock_data, new_data)
-        updated_data = updated_data.reset_index(drop=True)
+#TODO: transformar new_data index em uma coluna, antes de concatenar e salvar. Está perdendo a data. Ou comentar reset_index e ver oq da
+        updated_data = pd.concat([stock_data, new_data])
+        #updated_data = updated_data.reset_index(drop=True)
 
         SIStockStorage.check_directory_created()
         csv_name = SIStockStorage.csv_path(stock)
@@ -77,8 +96,23 @@ class SIStockStorage:
 
 
     @staticmethod
-    def get_symbol_list(): pass
+    def get_symbol_list(listname=SIConfig.symbols_list_name):
+        df = SIStockStorage.get_symbol_archive(listname=listname)
 
+        if df is not None:
+            return list(df.symbol)
+        else:
+            return list()
+
+    @staticmethod
+    def update_data_for_symbol_list(listname=SIConfig.symbols_list_name):
+        list = SIStockStorage.get_symbol_list(listname=listname)
+
+        for symbol in list:
+            SIStockStorage.update_data(stock=symbol)
+            print(symbol)
+
+SIStockStorage.update_data_for_symbol_list()
 
 ### TO GET STOCK LIST
 #    from iexfinance.stocks import get_collections
