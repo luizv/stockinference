@@ -76,18 +76,31 @@ class SIStockStorage:
         updated_data.to_csv(csv_name)
 
 
+    @staticmethod
+    def get_symbol_list(): pass
 
 
 ### TO GET STOCK LIST
-    # def get_stock_list(self, name):
-    #     categories = ["Electronic Technology", "Distribution Services", "Health Technology",
-    #      "Commercial Services",  "Industrial Services", "Finance",
-    #      "Process Industries", "Transportation", "Technology Services",
-    #      "Producer Manufacturing", "Retail Trade", "Consumer Services",
-    #      "Non-Energy Minerals", "Utilities", "Miscellaneous", "Health Services",
-    #      "Consumer Durables", "Consumer Non-Durables", "Communications",
-    #      "Energy Minerals", "Government"]
-
+#    from iexfinance.stocks import get_collections
+#
+#     @staticmethod
+#     def get_stock_list():
+#         categories = ["Electronic Technology", "Distribution Services", "Health Technology",
+#                       "Commercial Services", "Industrial Services", "Finance",
+#                       "Process Industries", "Transportation", "Technology Services",
+#                       "Producer Manufacturing", "Retail Trade", "Consumer Services",
+#                       "Non-Energy Minerals", "Utilities", "Miscellaneous", "Health Services",
+#                       "Consumer Durables", "Consumer Non-Durables", "Communications",
+#                       "Energy Minerals", "Government"]
+#
+#         for c in categories:
+#             symbols = get_collections(c)
+#             symbols_list = pd.DataFrame.from_dict(symbols)
+#             SIStockStorage.check_directory_created()
+#             symbols_list.to_csv(SIStockStorage.csv_path(c))
+#
+#
+# SIStockStorage.get_stock_list()
 
 ### GET SYMBOLS (NEED REAL TOKEN)
 #from iexfinance.refdata import get_symbols

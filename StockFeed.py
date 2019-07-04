@@ -15,8 +15,10 @@ os.environ["IEX_TOKEN"] = "Tpk_d9cc24d84d83489d88e9faeaf93dbaf8"
 URL = "http://localhost:5000/stock/facts"
 headers = {'content-type': 'application/json'}
 
-# Send a request to each according
-index = 0
+
+
+
+
 while True:
     # Get historical data minute by minute
     # data = get_historical_intraday('AAPL', date, output_format='pandas')
@@ -47,5 +49,3 @@ while True:
     # Wait 1 second
     time.sleep(1)
 
-    # Increment index control
-    index += 1

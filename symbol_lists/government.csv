@@ -1,0 +1,10 @@
+,avgTotalVolume,calculationPrice,change,changePercent,close,closeTime,companyName,delayedPrice,delayedPriceTime,extendedChange,extendedChangePercent,extendedPrice,extendedPriceTime,high,iexAskPrice,iexAskSize,iexBidPrice,iexBidSize,iexLastUpdated,iexMarketPercent,iexRealtimePrice,iexRealtimeSize,iexVolume,latestPrice,latestSource,latestTime,latestUpdate,latestVolume,low,marketCap,open,openTime,peRatio,previousClose,symbol,week52High,week52Low,ytdChange
+0,3962.0,close,-0.79,-0.01977,39.7,1589125640319.0,Mishtann Foods Ltd.,,,,,,,,,,,,,,,,,39.0,Close,"July 3, 2019",1564345825341.0,0,,0.0,,,,40.98,539594-IB,73.46,2.84,0.446297
+1,0.0,close,0.0,0.0,10.43,1578582634603.0,Girdharilal Sugar & Allied Industries Ltd.,,,,,,,,,,,,,,,,,10.63,Close,"July 3, 2019",1596456741451.0,0,,0.0,,,,10.47,507506-IB,11.78,9.27,-0.049911
+2,1492.0,close,0.0,0.0,19.9,1599507018274.0,Superior Finlease Ltd.,,,,,,,,,,,,,,,,,20.5,Close,"July 3, 2019",1567620779273.0,0,,0.0,,,,20.3,539835-IB,20.6,15.1,0.09463
+3,141.0,close,1.83,0.04242,44.48,1610122158416.0,Ozone World Ltd.,,,,,,,,,,,,,,,,,44.19,Close,"July 3, 2019",1614826878527.0,0,,0.0,,,,42.0,539291-IB,65.87,34.71,0.098715
+4,0.0,close,0.0,0.0,12.06,1589188217129.0,Decillion Finance Ltd.,,,,,,,,,,,,,,,,,12.09,Close,"July 3, 2019",1562953429584.0,0,,0.0,,,,12.09,539190-IB,12.04,11.94,0.0
+5,6826.0,close,0.0,0.0,1.82,1632353192974.0,Geetanjali Credit & Capital Ltd.,,,,,,,,,,,,,,,,,1.78,Close,"July 3, 2019",1614879546542.0,0,,0.0,,,,1.82,539486-IB,2.04,0.77,1.047224
+6,,previousclose,,,,,"Renovate Neighborhoods, Inc.",,,,,,,,,,,,,,,,,,N/A,N/A,,0,,,,,,,RNVT,0.0,0.0,0.0
+7,,previousclose,,,,,International Finance Corp. (District of Columbia),,,,,,,,,,,,,,,,,,N/A,N/A,,0,,,,,,,INTE86,0.0,0.0,0.0
+8,,previousclose,,,,,International Finance Corp. (District of Columbia),,,,,,,,,,,,,,,,,,N/A,N/A,,0,,,,,,,INTE87,0.0,0.0,0.0
