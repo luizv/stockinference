@@ -4,6 +4,8 @@ from iexfinance.stocks import get_historical_intraday
 from iexfinance.stocks import Stock
 import os
 import requests
+from SIConfig import SIConfig
+from SITimeSeriesType import SITimeSeriesType
 from datetime import datetime
 
 # SET API PERMISSIONS
@@ -15,6 +17,10 @@ os.environ["IEX_TOKEN"] = "Tpk_d9cc24d84d83489d88e9faeaf93dbaf8"
 URL = "http://localhost:5000/stock/facts"
 headers = {'content-type': 'application/json'}
 
+if SIConfig.data_type == SITimeSeriesType.daily:
+    # update_daily_data
+elif SIConfig.data_type == SITimeSeriesType.intradaily:
+    # update_intradaily_data
 
 
 
@@ -25,20 +31,14 @@ while True:
     data = Stock('AAPL').get_quote()
 
     # Data
-    openData = data['open']
-    closeData = data['close']
-    highData = data['high']
-    lowData = data['low']
+    openValue = data['open']
+    closeValue = data['close']
+    highValue = data['high']
+    lowValue = data['low']
     volumeData = data['latestVolume']
 
-    # Separate the data
-    openValue = openData
-    closeValue = closeData
-    highValue = highData
-    lowValue = lowData
 
     # Print the data as it will be sent
-
     # Encoding JSON data
     data = '{"close":' + "{0:0.2f}".format(closeValue) + ', "open":' + "{0:0.2f}".format(openValue) + ', "high":' + "{0:0.2f}".format(highValue) + ', "low":' + "{0:0.2f}".format(lowValue) + '}'
     print(data)

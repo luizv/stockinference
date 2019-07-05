@@ -74,8 +74,8 @@ class SIStockStorage:
         stock_data = SIStockStorage.get_stock_archive(stock)
 
         if stock_data is not None:
-            stock_data = pd.DataFrame()
-            # from_date = last_updated_data_for_stock
+           # stock_data = pd.DataFrame()
+            from_date = stock_data.last_valid_index
         else:
             stock_data = pd.DataFrame()
 
@@ -85,7 +85,6 @@ class SIStockStorage:
 
         new_data = get_historical_data(stock, start=start, end=end, output_format='pandas')
 
-#TODO: transformar new_data index em uma coluna, antes de concatenar e salvar. Está perdendo a data. Ou comentar reset_index e ver oq da
         updated_data = pd.concat([stock_data, new_data])
         #updated_data = updated_data.reset_index(drop=True)
 
@@ -112,7 +111,11 @@ class SIStockStorage:
             SIStockStorage.update_data(stock=symbol)
             print(symbol)
 
-SIStockStorage.update_data_for_symbol_list()
+
+    @staticmethod
+    def get_intraday_data(list): pass
+
+#SIStockStorage.update_data_for_symbol_list()
 
 ### TO GET STOCK LIST
 #    from iexfinance.stocks import get_collections
