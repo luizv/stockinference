@@ -11,6 +11,7 @@ from SIDatetimeFormatter import SIDatetimeFormatter
 import pandas as pd
 from datetime import datetime
 import json
+import numpy as np
 
 # SET API PERMISSIONS
 os.environ["IEX_API_VERSION"] = "iexcloud-sandbox"
@@ -97,8 +98,10 @@ while True:
         # DUAS FORMAS DE ORGANIZAR O JSON PARA ENVIO
         #json = symbol_df.to_json(orient='split') # FORMA 1
         #json = symbol_dict.to_json(orient='split') # FORMA 2
-
-
+        #symbol_df.replace(["NaN", 'NaT'], 0, inplace = True)
+       # symbol_df.dropna(inplace=True)
+        symbol_df[['low','high','close','open','volume']] = symbol_df[['low','high','close','open','volume']].apply(pd.to_numeric)
+        symbol_df.dropna(inplace=True)
         volume = list(symbol_df.volume.values)
         volume = [ int(x) for x in volume]
         low = list(symbol_df.low.values)
@@ -108,7 +111,7 @@ while True:
         date = list(symbol_df.datetime.values)
         date = [ int(x) for x in date]
 
-        json2 = '{"date":' + json.dumps(date) + ',"low":' + json.dumps(low) + ',"high":' + json.dumps(high) +  ',"close":' + json.dumps(close) + ',"open":' + json.dumps(open) +  ',"volume":' + json.dumps(volume) + ',"type":' + str(SIConfig.data_type) + '}'
+        json2 = '{"date":' + json.dumps(date) + ', "low":' + json.dumps(low) + ', "high":' + json.dumps(high) +  ', "close":' + json.dumps(close) + ', "open":' + json.dumps(open) +  ', "volume":' + json.dumps(volume) + ', "type":' + str(SIConfig.data_type) + '}'
         print(json2)
 
         # Send request
