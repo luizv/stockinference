@@ -35,7 +35,7 @@ with statechart('stock'):
         @to('next')
         @when_all(+m.low)
         def test1(c):
-            print(c.m.low)
+            #print(c.m.low)
             mm5 = pd.Series(np.array(c.m.close)).rolling(window=5).mean()
             print(mm5)
             print('start -> next')

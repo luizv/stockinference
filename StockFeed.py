@@ -98,27 +98,36 @@ while True:
         # DUAS FORMAS DE ORGANIZAR O JSON PARA ENVIO
         #json = symbol_df.to_json(orient='split') # FORMA 1
         #json = symbol_dict.to_json(orient='split') # FORMA 2
-        #symbol_df.replace(["NaN", 'NaT'], 0, inplace = True)
-       # symbol_df.dropna(inplace=True)
+
+        #print(symbol_df.tail(1))
         symbol_df[['low','high','close','open','volume']] = symbol_df[['low','high','close','open','volume']].apply(pd.to_numeric)
-        symbol_df.dropna(inplace=True)
+        #symbol_df[['low','high','close','open','volume']].dropna(axis=0, how='any', inplace=True)
+        #symbol_df.replace(['NaN', 'NaT','nan', np.isnan, ""], 0, inplace = True)
+
+        symbol_df = symbol_df.loc[(symbol_df.low.notnull()) & (symbol_df.open.notnull()) & (symbol_df.close.notnull()) & (symbol_df.high.notnull()) & (symbol_df.volume.notnull()) ]
+
         volume = list(symbol_df.volume.values)
-        volume = [ int(x) for x in volume]
+        volume = [int(x) for x in volume]
         low = list(symbol_df.low.values)
         high = list(symbol_df.high.values)
         close = list(symbol_df.close.values)
-        open = list(symbol_df.open.values)
+        openv = list(symbol_df.open.values)
         date = list(symbol_df.datetime.values)
         date = [ int(x) for x in date]
+
+
+        to_remove = []
+
+        #for re
 
         print("low")
         print(low)
         print(high)
         print(close)
-        print(open)
+        print(openv)
         print(date)
 
-        json2 = '{"date":' + json.dumps(date) + ', "low":' + json.dumps(low) + ', "high":' + json.dumps(high) +  ', "close":' + json.dumps(close) + ', "open":' + json.dumps(open) +  ', "volume":' + json.dumps(volume) + ', "type":' + "1" + '}'
+        json2 = '{"date":' + json.dumps(date) + ', "low":' + json.dumps(low) + ', "high":' + json.dumps(high) +  ', "close":' + json.dumps(close) + ', "open":' + json.dumps(openv) +  ', "volume":' + json.dumps(volume) + ', "type":' + "1" + '}'
         print(json2)
 
         # Send request
