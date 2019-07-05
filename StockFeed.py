@@ -17,9 +17,9 @@ os.environ["IEX_TOKEN"] = "Tpk_d9cc24d84d83489d88e9faeaf93dbaf8"
 URL = "http://localhost:5000/stock/facts"
 headers = {'content-type': 'application/json'}
 
-if SIConfig.data_type == SITimeSeriesType.daily:
+if SIConfig.data_type == SITimeSeriesType.daily: pass
     # update_daily_data
-elif SIConfig.data_type == SITimeSeriesType.intradaily:
+elif SIConfig.data_type == SITimeSeriesType.intradaily: pass
     # update_intradaily_data
 
 
@@ -33,8 +33,8 @@ while True:
     # Data
     openValue = data['open']
     closeValue = data['close']
-    highValue = data['high']
-    lowValue = data['low']
+    highValue = data['high'] if data['high'] is not None else max(openValue, closeValue)
+    lowValue = data['low'] if data['low'] is not None else min(openValue, closeValue)
     volumeData = data['latestVolume']
 
 
