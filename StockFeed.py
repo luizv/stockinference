@@ -10,6 +10,7 @@ from SIStockStorage import SIStockStorage
 from SIDatetimeFormatter import SIDatetimeFormatter
 import pandas as pd
 from datetime import datetime
+import json
 
 # SET API PERMISSIONS
 os.environ["IEX_API_VERSION"] = "iexcloud-sandbox"
@@ -88,18 +89,30 @@ while True:
 
         symbol_df = data_dict[symbol]
         symbol_df['datetime'] = symbol_df.index
-
+        #symbol_df = symbol_df.transpose()
         #PARA VISUALIZAR SE TA ATUALIZANDO CERTO O DF
         #print(symbol_df.tail(10))
 
 
         # DUAS FORMAS DE ORGANIZAR O JSON PARA ENVIO
-        json = symbol_df.to_json(orient='records') # FORMA 1
+        #json = symbol_df.to_json(orient='split') # FORMA 1
         #json = symbol_dict.to_json(orient='split') # FORMA 2
 
 
+        volume = list(symbol_df.volume.values)
+        volume = [ int(x) for x in volume]
+        low = list(symbol_df.low.values)
+        high = list(symbol_df.high.values)
+        close = list(symbol_df.close.values)
+        open = list(symbol_df.open.values)
+        date = list(symbol_df.datetime.values)
+        date = [ int(x) for x in date]
+
+        json2 = '{"date":' + json.dumps(date) + ',"low":' + json.dumps(low) + ',"high":' + json.dumps(high) +  ',"close":' + json.dumps(close) + ',"open":' + json.dumps(open) +  ',"volume":' + json.dumps(volume) + ',"type":' + str(SIConfig.data_type) + '}'
+        print(json2)
+
         # Send request
-        response = requests.post(URL, headers=headers, data=json)
+        response = requests.post(URL, headers=headers, data=json2)
 
 
     # FORA DO FOR PORQUE SERAO VARIOS PAPÉIS:

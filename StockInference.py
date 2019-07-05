@@ -1,5 +1,7 @@
 from durable.lang import *
 import redis
+import numpy as np
+import pandas as pd
 import time
 
 ### REDIS
@@ -12,6 +14,8 @@ import time
 # redis-server /usr/local/etc/redis.conf
 #
 # Port 6379 is default. To change it, just edit redis.conf
+def testetrue():
+    return True
 
 pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
 r = redis.Redis(connection_pool=pool)
@@ -19,10 +23,11 @@ r.flushall()
 
 
 
+
 with statechart('stock'):
     with state('input'):
         @to('start')
-        @when_all(+m.low)
+        @when_all(+m.close)
         def test(c):
             print('input -> start')
 
@@ -30,6 +35,9 @@ with statechart('stock'):
         @to('next')
         @when_all(+m.low)
         def test1(c):
+            print(c.m.low)
+            mm5 = testetrue()   #pd.Series(np.array(c.m.close)).rolling(window=5).mean()
+            print(mm5)
             print('start -> next')
 
     with state('next'):
@@ -48,7 +56,9 @@ with statechart('stock'):
         @to('start')
         @when_all(+m.low)
         def test4(t):
-            print('buy -> input')
+            print('buy -> start')
+
+
 
 
     @when_all(m.close.allItems(item > 185) & m.open.allItems(item > 150) & m.high.allItems(item > 185))
@@ -81,8 +91,8 @@ with statechart('stock'):
 
 
     @when_start
-    def start(host):
-        host.post('stock', {'value': [150], 'open': [150], 'high': [150], 'low': [150], 'volume': [150]})
+    def start(host): pass
+        # host.post('stock', {'value': [150], 'open': [150], 'high': [150], 'low': [150], 'volume': [150]})
         # host.post('stock', {'open': [100]})
         # host.post('stock', {'high': [100]})
         # host.post('stock', {'low': [100]})
