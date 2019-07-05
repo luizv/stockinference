@@ -14,8 +14,11 @@ import time
 # redis-server /usr/local/etc/redis.conf
 #
 # Port 6379 is default. To change it, just edit redis.conf
-def testetrue():
-    return True
+
+
+def mm(period, data):
+    return pd.Series(np.array(data)).rolling(window=period).mean().iloc[-1]
+
 
 pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
 r = redis.Redis(connection_pool=pool)
@@ -36,7 +39,7 @@ with statechart('stock'):
         @when_all(+m.low)
         def test1(c):
             #print(c.m.low)
-            mm5 = pd.Series(np.array(c.m.close)).rolling(window=5).mean()
+            mm5 = mm(5, c.m.close) #pd.Series(np.array(c.m.close)).rolling(window=5).mean().tail(1)
             print(mm5)
             print('start -> next')
 
