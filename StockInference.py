@@ -17,11 +17,44 @@ pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
 r = redis.Redis(connection_pool=pool)
 r.flushall()
 
-with ruleset('stock'):
+
+
+with statechart('stock'):
+    with state('input'):
+        @to('start')
+        @when_all(+m.low)
+        def test(c):
+            print('input -> start')
+
+    with state('start'):
+        @to('next')
+        @when_all(+m.low)
+        def test1(c):
+            print('start -> next')
+
+    with state('next'):
+        @to('finish')
+        @when_all(+m.low)
+        def test2(c):
+            print('next -> finish')
+
+    with state('finish'):
+        @to('buy')
+        @when_all(+m.low)
+        def test3(t):
+            print('finish -> buy')
+
+    with state('buy'):
+        @to('start')
+        @when_all(+m.low)
+        def test4(t):
+            print('buy -> input')
+
 
     @when_all(m.close.allItems(item > 185) & m.open.allItems(item > 150) & m.high.allItems(item > 185))
     def rule0(c):
         print("entrou")
+
 
     # # matching primitive array
     # @when_all(m.values.anyItem(item > 0))
