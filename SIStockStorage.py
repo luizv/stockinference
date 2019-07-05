@@ -1,6 +1,9 @@
 import pandas as pd
 from datetime import datetime
 from SIConfig import SIConfig
+from SITimeSeriesType import SITimeSeriesType
+from SIDatetimeFormatter import SIDatetimeFormatter
+from datetime import timedelta
 
 import json
 
@@ -64,14 +67,21 @@ class SIStockStorage:
 
 #API
     @staticmethod
-    def update_data(stock):
+    def update_data(stock): #, type=SITimeSeriesType.daily):
         '''
         Get or update data store
         :param stock:
         :return:
         '''
+
         from_date = SIConfig.initial_date
         stock_data = SIStockStorage.get_stock_archive(stock)
+
+        # if type == SITimeSeriesType.intradaily:
+        #     from_date = SIConfig.initial_date
+        #    stock_data = SIStockStorage.get_stock_archive(stock)
+
+
 
         if stock_data is not None:
            # stock_data = pd.DataFrame()
@@ -113,7 +123,30 @@ class SIStockStorage:
 
 
     @staticmethod
-    def get_intraday_data(list): pass
+    def get_intraday_data(listname=SIConfig.symbols_list_name):
+        intraday_dict = dict()
+
+        list=SIStockStorage.get_symbol_list(listname)
+
+        for stock in list:
+            df = pd.DataFrame()
+            today = datetime.today()
+            days = SIConfig.intradaily_interval
+            count = 0
+
+            while days > count:
+                print("- DOWNLOAD INTRADAY [" + stock + "]: D-" + str(count))
+                reference_day = today - timedelta(days=count)
+                new_data = get_historical_intraday(stock, date=reference_day, output_format='pandas')
+                df = pd.concat([df,new_data])
+                count = count + 1
+
+            df.index = pd.to_datetime(df.index)
+
+            intraday_dict[stock] = df
+
+        return intraday_dict
+
 
 #SIStockStorage.update_data_for_symbol_list()
 
