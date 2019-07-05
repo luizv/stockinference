@@ -111,7 +111,14 @@ while True:
         date = list(symbol_df.datetime.values)
         date = [ int(x) for x in date]
 
-        json2 = '{"date":' + json.dumps(date) + ', "low":' + json.dumps(low) + ', "high":' + json.dumps(high) +  ', "close":' + json.dumps(close) + ', "open":' + json.dumps(open) +  ', "volume":' + json.dumps(volume) + ', "type":' + str(SIConfig.data_type) + '}'
+        print("low")
+        print(low)
+        print(high)
+        print(close)
+        print(open)
+        print(date)
+
+        json2 = '{"date":' + json.dumps(date) + ', "low":' + json.dumps(low) + ', "high":' + json.dumps(high) +  ', "close":' + json.dumps(close) + ', "open":' + json.dumps(open) +  ', "volume":' + json.dumps(volume) + ', "type":' + "1" + '}'
         print(json2)
 
         # Send request
