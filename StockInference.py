@@ -32,16 +32,16 @@ with statechart('stock'):
         @to('start')
         @when_all(+m.close)
         def test1(c):
-            print('input -> start')
+            print('STATE: input -> start')
 
     with state('start'):
-        @to('step1')
+        @to('calculate_resistence_support')
         @when_all(+m.close)
         def test2(c):
-            print('start -> step1')
+            print('STATE: start -> calculate_resistence')
 
-    with state('step1'):
-        @to('step2')
+    with state('calculate_resistence_support'):
+        @to('prepare_crossover')
         @when_all(m.low.allItems(item > 0) and m.high.allItems(item > 0))
         def test3(c):
 
@@ -87,54 +87,50 @@ with statechart('stock'):
             if touchdown >= min_touches:
                 sup = minima
 
-            print("resistence %0.2f" % res)
-            print("support %0.2f" % sup)
+            #print("resistence %0.2f" % res)
+            #print("support %0.2f" % sup)
 
             c.post({'res': res, 'sup': sup})
+            print('STATE: calculate_resistence -> prepare_crossover')
 
-    with state('step2'):
-        @to('step3')
+    with state('prepare_crossover'):
+        @to('crossover')
         @when_all(+m.close)
         def test4(c):
-            print('step2 -> step3')
+            print('STATE: prepare_crossover -> crossover')
             # average_fast = pd.Series(np.array(c.m.close)).rolling(window=20).mean().iloc[:-1]
             # average_slow = pd.Series(np.array(c.m.close)).rolling(window=5).mean()
             mm5close = mm(5, c.m.close, 1) #average_fast.iloc[:-1] #average_slow[pd.Series(average_slow).last_valid_index()]
             mm20close = mm(20, c.m.close, 1) #average_slow.iloc[:-1] #average_fast[pd.Series(average_fast).last_valid_index()]
-            print("OK")
             mm5close_previous = mm(5, c.m.close, 2) #average_fast[pd.Series(average_fast).last_valid_index()-1]
             mm20close_previous = mm(20, c.m.close, 2) #average_slow[pd.Series(average_slow).last_valid_index()-1]
-            print("passou:%0.2f" % mm20close)
+
+            # print("passou:%0.2f" % mm20close)
             c.post({"mm20Close": float(mm20close), "mm5Close": float(mm5close), "mm5Close_previous": float(mm5close_previous), "mm20Close_previous": float(mm20close_previous)})
 
-    with state('step3'):
-        @to('step4')
+    with state('crossover'):
+        @to('start')
         @when_all((m.mm5Close <= m.mm20Close) and (m.mm5Close_previous >= m.mm20Close_previous))
         def test6(c):
-            print("Buy")
+            print("****SELL\n")
 
-        @to('step4')
+        @to('sell')
         @when_all(+m.close)
         def test6(c):
-            print("testa sell")
+            print("STATE: crossover -> sell")
 
 
-    with state('step4'):
-        @to('step5')
+    with state('sell'):
+        @to('start')
         @when_all((m.mm5Close >= m.mm20Close) and (m.mm5Close_previous <= m.mm20Close_previous))
         def test8(c):
-            print("Sell")
+            print("****BUY\n")
 
         @to('start')
         @when_all(+m.close)
         def test6(c):
-            print("return")
+            print("STATE: failed sell -> start")
 
-    with state('step5'):
-        @to('start')
-        @when_all(+m.close)
-        def test10(c):
-            print("return")
 
     @when_start
     def start(host): pass
