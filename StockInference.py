@@ -19,6 +19,9 @@ import matplotlib.pyplot as plt
 # Port 6379 is default. To change it, just edit redis.conf
 
 
+def mm(period, data, shift=1):
+	return pd.Series(np.array(data)).rolling(window=period).mean().iloc[-shift]
+
 pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
 r = redis.Redis(connection_pool=pool)
 r.flushall()
@@ -35,12 +38,13 @@ with statechart('stock'):
         @to('step1')
         @when_all(+m.close)
         def test2(c):
-            print('input -> start')
+            print('start -> step1')
 
     with state('step1'):
         @to('step2')
-        @when_all(+m.low and +m.high)
+        @when_all(m.low.allItems(item > 0) and m.high.allItems(item > 0))
         def test3(c):
+
             min_touches = 2
             stat_likeness_percent = 1.2
             bounce_percent = 5
@@ -50,6 +54,7 @@ with statechart('stock'):
             # Identifying local high and local low
             maxima = np.array(c.m.high).max()
             minima = np.array(c.m.high).min()
+
 
             # Calculating distance between max and min (total price movement)
             move_range = maxima - minima
@@ -81,19 +86,26 @@ with statechart('stock'):
                     awaiting_bounce = False
             if touchdown >= min_touches:
                 sup = minima
-            c.assert_fact({'res': res, 'sup': sup})
+
+            print("resistence %0.2f" % res)
+            print("support %0.2f" % sup)
+
+            c.post({'res': res, 'sup': sup})
 
     with state('step2'):
         @to('step3')
-        @when_all(+m.res > 0)
+        @when_all(+m.close)
         def test4(c):
-            average_fast = pd.Series(np.array(c.m.close)).rolling(window=20).mean()
-            mm20Close = average_fast[pd.Series(average_fast).last_valid_index()]
-            average_slow = pd.Series(np.array(c.m.close)).rolling(window=5).mean()
-            mm5Close = average_slow[pd.Series(average_slow).last_valid_index()]
-            mm5Close_previous = pd.Series(m.mm5Close).shift(1)
-            mm20Close_previous = pd.Series(m.mm20Close).shift(1)
-            c.assert_fact({"mm20Close": mm20Close, "mm5Close": mm5Close, "mm5Close_previous": mm5Close_previous, "mm20Close_previous": mm20Close_previous})
+            print('step2 -> step3')
+            # average_fast = pd.Series(np.array(c.m.close)).rolling(window=20).mean().iloc[:-1]
+            # average_slow = pd.Series(np.array(c.m.close)).rolling(window=5).mean()
+            mm5close = mm(5, c.m.close, 1) #average_fast.iloc[:-1] #average_slow[pd.Series(average_slow).last_valid_index()]
+            mm20close = mm(20, c.m.close, 1) #average_slow.iloc[:-1] #average_fast[pd.Series(average_fast).last_valid_index()]
+            print("OK")
+            mm5close_previous = mm(5, c.m.close, 2) #average_fast[pd.Series(average_fast).last_valid_index()-1]
+            mm20close_previous = mm(20, c.m.close, 2) #average_slow[pd.Series(average_slow).last_valid_index()-1]
+            print("passou:%0.2f" % mm20close)
+            c.post({"mm20Close": float(mm20close), "mm5Close": float(mm5close), "mm5Close_previous": float(mm5close_previous), "mm20Close_previous": float(mm20close_previous)})
 
     with state('step3'):
         @to('step4')
@@ -101,11 +113,22 @@ with statechart('stock'):
         def test6(c):
             print("Buy")
 
+        @to('step4')
+        @when_all(+m.close)
+        def test6(c):
+            print("testa sell")
+
+
     with state('step4'):
         @to('step5')
         @when_all((m.mm5Close >= m.mm20Close) and (m.mm5Close_previous <= m.mm20Close_previous))
         def test8(c):
             print("Sell")
+
+        @to('start')
+        @when_all(+m.close)
+        def test6(c):
+            print("return")
 
     with state('step5'):
         @to('start')
