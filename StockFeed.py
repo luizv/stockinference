@@ -136,4 +136,4 @@ while True:
 
     # FORA DO FOR PORQUE SERAO VARIOS PAPÉIS:
     # Wait 1 second //TODO: pode ser um minuto (60)?
-    time.sleep(1)
+    time.sleep(10)
