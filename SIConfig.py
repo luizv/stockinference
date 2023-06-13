@@ -9,7 +9,7 @@ class SIConfig:
     analysis_type = SIAnalysisType.realtime
     data_type     = SITimeSeriesType.intradaily
     initial_date  = datetime(2017, 1, 1)
-    intradaily_interval = 3
+    intradaily_interval = 5
 
     storage_directory_name = "exports"
     symbols_directory_name = "symbol_lists"

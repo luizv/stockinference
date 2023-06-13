@@ -33,7 +33,6 @@ elif SIConfig.data_type == SITimeSeriesType.intradaily:
     data_dict = SIStockStorage.get_intraday_data()
 
 
-
 # while True:
 #     # Get historical data minute by minute
 #     # data = get_historical_intraday('AAPL', date, output_format='pandas')
@@ -62,19 +61,20 @@ elif SIConfig.data_type == SITimeSeriesType.intradaily:
 ## NOVO CICLO
 while True:
 
-    #por enquanto só tem a APPL nessa lista, mas é só trocar a lista pra mandar pra todos.
+    #por enquanto so tem a APPL nessa lista, mas eh so trocar a lista pra mandar pra todos.
     for symbol in SIStockStorage.get_symbol_list():
 
 
         ## PEGANDO NOVOS DADOS, JUNTANDO COM OS HISTORICAL INTRADAY E NORMALIZANDO
         new_data = pd.DataFrame.from_records([Stock(symbol).get_quote()])
+        print("symbol", symbol)
         print(new_data.columns)
         print(data_dict[symbol].columns)
         new_data = new_data[['close','open','low', 'high', 'latestTime', 'latestVolume', 'latestUpdate']]
         new_data.rename(columns={'latestUpdate':'datetime','latestVolume': 'volume', 'latestTime': 'date'}, inplace=True)
 
 
-        # PROXIMA LINHA APENAS COM DADOS REAIS, SENÃO O TIMESTAMP VEM DOIDO
+        # PROXIMA LINHA APENAS COM DADOS REAIS, SENaO O TIMESTAMP VEM DOIDO
         # new_data['datetime'] = SIDatetimeFormatter.timestampToString(new_data['datetime'].item()/1000)
 
         new_data['datetime'] = datetime.now()
@@ -106,6 +106,8 @@ while True:
 
         symbol_df = symbol_df.loc[(symbol_df.low.notnull()) & (symbol_df.open.notnull()) & (symbol_df.close.notnull()) & (symbol_df.high.notnull()) & (symbol_df.volume.notnull()) ]
 
+        symbol_df.to_csv('output\%s.csv'.format(symbol))
+
         volume = list(symbol_df.volume.values)
         volume = [int(x) for x in volume]
         low = list(symbol_df.low.values)
@@ -127,13 +129,13 @@ while True:
         print(openv)
         print(date)
 
-        json2 = '{"date":' + json.dumps(date) + ', "low":' + json.dumps(low) + ', "high":' + json.dumps(high) +  ', "close":' + json.dumps(close) + ', "open":' + json.dumps(openv) +  ', "volume":' + json.dumps(volume) + ', "type":' + "1" + '}'
-        print(json2)
+        #json2 = '{"date":' + json.dumps(date) + ', "low":' + json.dumps(low) + ', "high":' + json.dumps(high) +  ', "close":' + json.dumps(close) + ', "open":' + json.dumps(openv) +  ', "volume":' + json.dumps(volume) + ', "type":' + "1" + '}'
+        #print(json2)
 
         # Send request
-        response = requests.post(URL, headers=headers, data=json2)
+        #response = requests.post(URL, headers=headers, data=json2)
 
 
-    # FORA DO FOR PORQUE SERAO VARIOS PAPÉIS:
+    # FORA DO FOR PORQUE SERAO VARIOS PAPeIS:
     # Wait 1 second //TODO: pode ser um minuto (60)?
     time.sleep(1)

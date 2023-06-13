@@ -150,7 +150,7 @@ class SIStockStorage:
 
 #SIStockStorage.update_data_for_symbol_list()
 
-### TO GET STOCK LIST
+# ## TO GET STOCK LIST
 #    from iexfinance.stocks import get_collections
 #
 #     @staticmethod
@@ -171,10 +171,10 @@ class SIStockStorage:
 #
 #
 # SIStockStorage.get_stock_list()
-
-### GET SYMBOLS (NEED REAL TOKEN)
-#from iexfinance.refdata import get_symbols
-
+#
+# ## GET SYMBOLS (NEED REAL TOKEN)
+# from iexfinance.refdata import get_symbols
+#
 # symbols = get_symbols(format='csv')
 # symbols_list = pd.DataFrame.from_dict(symbols)
 # SIStockStorage.check_directory_created()
